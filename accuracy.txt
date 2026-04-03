@@ -1,0 +1,66 @@
+lr simple=MAE: 71.54643307761285
+RMSE: 89.94379494464107
+R2 Score: 0.9838573402529139
+poly_lr=MAE: 71.54643307761285
+RMSE: 89.94379494464107
+R2 Score: 0.9838573402529139
+rigde_simple=MAE: 70.68871772050245
+RMSE: 90.99400329263838
+R2 Score: 0.9834781672176012
+ridge_tuning=MAE: 70.36257943051834
+RMSE: 90.5868542804407
+R2 Score: 0.9836256889915389
+lasso_simple=MAE: 70.7007703330863
+RMSE: 90.81156892998047
+R2 Score: 0.9835443502270721
+lasso_tuning=MAE: 70.7007703330863
+RMSE: 90.81156892998047
+R2 Score: 0.9835443502270721
+elasticnet simple=MAE: 172.9433129889579
+RMSE: 210.17220446097403
+R2 Score: 0.9118579317972636
+elasticnet_tunig=MAE: 70.41731041894751
+RMSE: 90.66771775456309
+R2 Score: 0.9835964424818803
+decisiontree simple=MAE: 98.76666666666667
+RMSE: 134.53277172000384
+R2 Score: 0.9638848970250521
+decisiontree_tuning=MAE: 74.5175152781206
+RMSE: 94.68087879542921
+R2 Score: 0.9821121873225568
+randomforest simple=MAE: 76.03944444444446
+RMSE: 103.67981203901
+R2 Score: 0.9785503070266957
+randomforest_tuning=MAE: 70.72847157992004
+RMSE: 91.51817499212765
+R2 Score: 0.9832872706606272
+svr simple=MAE: 148.86903751046484
+RMSE: 180.74935521377307
+R2 Score: 0.9348092179223982
+svr_tuning=MAE: 71.93543069718598
+RMSE: 90.51882112674294
+R2 Score: 0.9836502748479737
+knn simple=MAE: 78.26555555555555
+RMSE: 106.75872589889573
+R2 Score: 0.9772574351391126
+knn_tuning=MAE: 68.3979797979798
+RMSE: 91.74371567792087
+R2 Score: 0.9832047942528517
+| Model                  | MAE ↓       | RMSE ↓    | R² Score ↑  | Remark                      |
+| ---------------------- | ----------- | --------- | ----------- | --------------------------- |
+| Linear Regression      | 71.55       | **89.94** | 0.98385     | Baseline strong             |
+| Polynomial Regression  | 71.55       | **89.94** | 0.98385     | Same as LR (no improvement) |
+| Ridge (Simple)         | 70.69       | 90.99     | 0.98347     | Slight regularization       |
+| Ridge (Tuned)          | 70.36       | 90.58     | 0.98362     | Improved slightly           |
+| Lasso (Simple)         | 70.70       | 90.81     | 0.98354     | Stable                      |
+| Lasso (Tuned)          | 70.70       | 90.81     | 0.98354     | No change                   |
+| ElasticNet (Simple)    | ❌172.94    | ❌210.17 | ❌0.91185   | Very poor                   | 
+| ElasticNet (Tuned)     | 70.42       | 90.66     | 0.98359     | Fixed after tuning          |
+| Decision Tree (Simple) | 98.77       | 134.53    | 0.96388     | Overfitting                 |
+| Decision Tree (Tuned)  | 74.52       | 94.68     | 0.98211     | Improved                    |
+| Random Forest (Simple) | 76.04       | 103.68    | 0.97855     | Good                        |
+| Random Forest (Tuned)  | 70.73       | 91.51     | 0.98328     | Strong                      |
+| SVR (Simple)           | ❌148.86     | ❌180.74   | 0.93480     | Poor                     |
+| SVR (Tuned)            | 71.93       | 90.51     | **0.98365** | Very strong                 |
+| KNN (Simple)           | 78.27       | 106.75    | 0.97725     | Weak                        |
+| KNN (Tuned)            | ⭐ **68.39** | 91.74     | 0.98320     | Best MAE                   |

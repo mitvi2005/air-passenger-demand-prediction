@@ -1,0 +1,197 @@
+{# jinja2 template #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AirPax - Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/style.css"/>
+<style>
+.pred-wrap{max-width:700px;margin:0 auto;}
+.pred-head{padding-top:26px;}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:36px 40px;margin-bottom:28px;}
+@media(max-width:560px){.form-card{padding:22px 18px;}}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr;}}
+.month-picker{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:24px;}
+.mpick{padding:7px 0;border-radius:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.04em;border:1px solid var(--border);background:var(--surface);color:var(--mut);cursor:pointer;text-align:center;transition:all .2s;user-select:none;}
+.mpick:hover{border-color:var(--acl);color:var(--acll);}
+.mpick.sel{border-color:var(--acl);color:var(--acll);background:rgba(17,31,162,.18);font-weight:700;}
+.submit-btn{width:100%;padding:16px;background:var(--ac);color:var(--warm);border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.04em;transition:background .2s,box-shadow .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:10px;}
+.submit-btn:hover{background:var(--acl);box-shadow:0 0 32px rgba(17,31,162,.55);}
+.submit-btn:active{transform:scale(.98);}
+.range-hint{font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);margin-top:5px;}
+.result-card{border-radius:18px;padding:44px 40px;text-align:center;background:linear-gradient(135deg,rgba(17,31,162,.18) 0%,rgba(17,31,162,.06) 100%);border:2.5px solid var(--acl);margin-bottom:20px;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.res-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);margin-bottom:16px;}
+.res-number{font-family:'Syne',sans-serif;font-size:100px;font-weight:800;line-height:1;color:var(--acll);letter-spacing:-.04em;}
+@media(max-width:480px){.res-number{font-size:64px;}}
+.res-unit{font-family:'Space Mono',monospace;font-size:11px;color:var(--mut);margin-top:10px;}
+.res-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px;}
+.chip{padding:10px 18px;border-radius:10px;background:var(--surface);border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:10px;text-align:left;}
+.chip-lbl{color:var(--mut);font-size:8px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:3px;}
+.chip-val{color:var(--txt);font-weight:700;font-size:12px;}
+.chip-val.ac{color:var(--acll);}
+.chip-val.ok{color:var(--ok);}
+.err-card{background:rgba(224,92,92,.08);border:1px solid rgba(224,92,92,.35);border-radius:12px;padding:20px 24px;text-align:center;color:var(--err);font-family:'Space Mono',monospace;font-size:13px;margin-bottom:24px;}
+.ctx-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+@media(max-width:560px){.ctx-grid{grid-template-columns:1fr;}}
+.ctx-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+.ctx-card h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:7px;}
+.ctx-card p{font-size:12px;color:var(--sub);line-height:1.65;}
+.hiw-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:560px){.hiw-grid{grid-template-columns:1fr;}}
+.hiw-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.hiw-card .ic{font-size:22px;margin-bottom:8px;}
+.hiw-card h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:6px;}
+.hiw-card p{font-family:'Space Mono',monospace;font-size:10px;color:var(--mut);line-height:1.6;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-brand" href="/"><span class="brand-dot"></span>AirPax</a>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/information">Information</a>
+    <a class="nav-link active" href="/predictor">Predictor</a>
+    <a class="nav-link" href="/about">About</a>
+  </div>
+  <div class="nav-right">
+    <div class="theme-toggle" id="themeToggle"></div>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="page">
+  <div style="text-align:center;margin-bottom:36px;" class="a1 pred-head">
+    <div class="pg-label" style="justify-content:center;">Live - Linear Regression - R2={{ '%.4f'|format(stats.r2 if stats else 0) }} - Self-Retraining</div>
+    <h1 class="pg-title" style="font-size:clamp(28px,5vw,52px);">Passenger <span class="ac">Predictor</span></h1>
+    <p class="pg-desc" style="margin:0 auto;text-align:center;">Enter a year and month. The model predicts monthly airline passenger count and retrains with each new prediction.</p>
+  </div>
+
+  <div class="pred-wrap">
+    <div class="form-card a2">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:26px;">
+        <div class="dot"></div>
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;">Input Parameters</div>
+        <div style="margin-left:auto;"><span style="font-family:'Space Mono',monospace;font-size:8px;padding:4px 10px;border-radius:4px;background:rgba(78,203,168,.15);color:var(--ok);border:1px solid rgba(78,203,168,.3);">Active</span></div>
+      </div>
+      <form action="/predict" method="POST">
+        <div class="form-grid">
+          <div class="ig">
+            <label class="il">Year</label>
+            <input class="ifield" type="number" name="year" id="yearInp"
+                   min="1949" max="2050"
+                   value="{% if show_result %}{{ year }}{% else %}2024{% endif %}"
+                   placeholder="e.g. 2024" required/>
+            <div class="range-hint">Range: 1949 - 2050</div>
+          </div>
+          <div class="ig">
+            <label class="il">Month (1-12)</label>
+            <input class="ifield" type="number" name="month" id="monthInp"
+                   min="1" max="12"
+                   value="{% if show_result %}{{ month }}{% else %}6{% endif %}"
+                   placeholder="1-12" required/>
+            <div class="range-hint">1=Jan - 6=Jun - 12=Dec</div>
+          </div>
+        </div>
+        <div class="month-picker" id="mPicker">
+          {% set mns=['J','F','M','A','M','J','J','A','S','O','N','D'] %}
+          {% for i in range(1,13) %}
+          <button type="button" class="mpick{% if show_result and month==i %} sel{% elif not show_result and i==6 %} sel{% endif %}" id="mp{{ i }}" onclick="selMonth({{ i }})">{{ mns[i-1] }}</button>
+          {% endfor %}
+        </div>
+        <button type="submit" class="submit-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Predict Passengers
+        </button>
+      </form>
+    </div>
+
+    {% if error %}<div class="err-card a2">{{ error }}</div>{% endif %}
+
+    {% if show_result %}
+    <div class="result-card a2">
+      <div class="res-label">Predicted Monthly Passengers</div>
+      <div class="res-number" id="resNum">{{ prediction | int }}</div>
+      <div class="res-unit">estimated monthly passenger count (thousands)</div>
+      <div class="res-chips">
+        <div class="chip"><span class="chip-lbl">Month</span><span class="chip-val ac">{{ month_name }} ({{ month }})</span></div>
+        <div class="chip"><span class="chip-lbl">Year</span><span class="chip-val ac">{{ year }}</span></div>
+        <div class="chip"><span class="chip-lbl">Model</span><span class="chip-val">Linear Regression</span></div>
+        <div class="chip"><span class="chip-lbl">R2 Score</span><span class="chip-val ok">{{ '%.4f'|format(stats.r2 if stats else 0) }}</span></div>
+        <div class="chip"><span class="chip-lbl">MAE</span><span class="chip-val">{{ '%.2f'|format(stats.mae if stats else 0) }}</span></div>
+        <div class="chip"><span class="chip-lbl">MSE</span><span class="chip-val">{{ '%.2f'|format(stats.mse if stats else 0) }}</span></div>
+        <div class="chip"><span class="chip-lbl">Status</span><span class="chip-val ok">Retrained</span></div>
+      </div>
+    </div>
+
+    <div class="ctx-grid a3">
+      <div class="ctx-card">
+        <h4>Seasonal Context</h4>
+        <p>{% if month in [6,7,8] %}<span style="color:var(--acll);font-weight:700;">Peak season.</span> Summer months see 15-21% above-average demand globally.{% elif month in [12,1,2] %}<span style="color:var(--warn);font-weight:700;">Winter period.</span> Demand typically 10-15% below annual average.{% else %}<span style="color:var(--ok);font-weight:700;">Moderate season.</span> Spring and autumn demand stays close to the yearly average.{% endif %}</p>
+      </div>
+      <div class="ctx-card">
+        <h4>Year Context</h4>
+        <p>{% if year>=2024 %}<span style="color:var(--ok);font-weight:700;">Post-COVID recovery.</span> Aviation is moving beyond pre-pandemic peaks with strong growth.{% elif year>=2020 and year<=2023 %}<span style="color:var(--err);font-weight:700;">COVID impact zone.</span> Severe demand disruption was recorded in this period.{% elif year>=2000 %}<span style="color:var(--acll);font-weight:700;">Modern era.</span> Mass-market aviation brought higher and more stable passenger flows.{% else %}<span style="color:var(--sub);font-weight:700;">Classic era.</span> Aviation was still expanding rapidly from a lower base.{% endif %}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="sec-ttl a5">How It Works</div>
+    <div class="hiw-grid a5" style="margin-bottom:48px;">
+      <div class="hiw-card"><div class="ic">Model</div><h4>Linear Regression</h4><p>Passengers = b0 + b1*month + b2*year<br/>Trained on live records from `newdataair.csv`.</p></div>
+      <div class="hiw-card"><div class="ic">Loop</div><h4>Self-Retraining</h4><p>Each prediction is saved to CSV, then the model retrains immediately with the updated dataset.</p></div>
+      <div class="hiw-card"><div class="ic">Stats</div><h4>R2 = {{ '%.4f'|format(stats.r2 if stats else 0) }}</h4><p>Current live metrics: MAE {{ '%.2f'|format(stats.mae if stats else 0) }}, MSE {{ '%.2f'|format(stats.mse if stats else 0) }}.</p></div>
+      <div class="hiw-card"><div class="ic">Signals</div><h4>Seasonal Awareness</h4><p>Month and year together capture long-term growth plus recurring seasonal peaks and dips.</p></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="ft-left">Copyright 2026 - AirPax Forecast Engine - Flask + sklearn</div>
+    <div class="ft-tags"><span class="ft-tag">LinearRegression</span><span class="ft-tag">R2={{ '%.4f'|format(stats.r2 if stats else 0) }}</span><span class="ft-tag">Self-Retrain</span></div>
+  </footer>
+</div>
+
+<script src="/static/main.js"></script>
+<script>
+function selMonth(m){
+  document.getElementById('monthInp').value = m;
+  for(let i = 1; i <= 12; i++){
+    const button = document.getElementById('mp' + i);
+    if (!button) continue;
+    button.classList.toggle('sel', i === m);
+  }
+}
+
+const monthInput = document.getElementById('monthInp');
+if (monthInput) {
+  monthInput.addEventListener('input', function () {
+    const value = parseInt(this.value, 10);
+    if (value >= 1 && value <= 12) selMonth(value);
+  });
+}
+
+ {% if show_result %}
+ (function(){
+  const el = document.getElementById('resNum');
+  const target = {{ prediction | int }};
+  let start = null;
+  const duration = 1400;
+
+  function step(ts){
+    if(!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.round(ease * target).toLocaleString();
+    if(progress < 1) requestAnimationFrame(step);
+    else el.textContent = target.toLocaleString();
+  }
+
+  requestAnimationFrame(step);
+})();
+{% endif %}
+
+</script>
+</body>
+</html>  

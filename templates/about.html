@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AirPax · About</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/style.css"/>
+<style>
+.tech-pill{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:40px;background:var(--surface);border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:10px;color:var(--sub);margin:4px;transition:all .2s;}
+.about-head{padding-top:26px;}
+.tech-pill:hover{border-color:var(--acl);color:var(--acll);}
+.tl-item{display:grid;grid-template-columns:90px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--border);}
+.tl-item:last-child{border-bottom:none;}
+.tl-date{font-family:'Space Mono',monospace;font-size:9px;color:var(--acll);padding-top:2px;letter-spacing:.08em;}
+.tl-h{font-size:13px;font-weight:700;margin-bottom:5px;}
+.tl-p{font-size:12px;color:var(--sub);line-height:1.65;}
+.ci{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:12px;width:100%;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.ci:focus{border-color:var(--acl);box-shadow:0 0 0 3px rgba(17,31,162,.12);}
+.ci::placeholder{color:var(--mut);}
+textarea.ci{resize:vertical;min-height:110px;}
+.send-btn{width:100%;padding:15px;background:var(--ac);color:var(--warm);border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;}
+.send-btn:hover{background:var(--acl);box-shadow:0 0 26px rgba(17,31,162,.55);}
+.send-btn:active{transform:scale(.98);}
+.qlink{display:flex;justify-content:space-between;padding:12px 15px;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--txt);font-size:13px;transition:border-color .2s;margin-bottom:8px;}
+.qlink:hover{border-color:var(--acl);}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-brand" href="/"><span class="brand-dot"></span>AirPax</a>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/information">Information</a>
+    <a class="nav-link" href="/predictor">Predictor</a>
+    <a class="nav-link active" href="/about">About</a>
+  </div>
+  <div class="nav-right">
+    <div class="theme-toggle" id="themeToggle"></div>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="page">
+  <div class="a1 about-head">
+    <div class="pg-label">About the Project</div>
+    <h1 class="pg-title">About <span class="ac">AirPax</span></h1>
+    <p class="pg-desc">A machine learning research project predicting airline passenger demand using 21 model variants across 6 algorithm families, with a live self-retraining Flask API.</p>
+  </div>
+
+  <div class="g2 a2">
+    <div class="card">
+      <div class="card-hd"><div class="dot"></div>Project Overview</div>
+      <p style="font-size:14px;color:var(--sub);line-height:1.75;margin-bottom:14px;">AirPax forecasts monthly airline passenger volume across 1949–2026 using 21 model variants. The best model, Linear Regression, currently reports <strong style="color:var(--acll);">R² = {{ '%.4f'|format(stats.r2 if stats else 0) }}</strong> on month and year features.</p>
+      <p style="font-size:14px;color:var(--sub);line-height:1.75;">Every prediction triggers a self-retraining loop : new data is appended and the model retrains automatically, so R², MAE, MSE, RMSE, and total row count stay live across the UI.</p>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="dot w"></div>Why Linear Regression Won</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acll);flex-shrink:0;">→</span><span style="font-size:13px;color:var(--sub);">Passenger growth follows a near-perfect linear time trend</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acll);flex-shrink:0;">→</span><span style="font-size:13px;color:var(--sub);">Only 2 features, so the model stays simple and interpretable</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acll);flex-shrink:0;">→</span><span style="font-size:13px;color:var(--sub);">Boosting and tree models can overfit on this lightweight feature space</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acll);flex-shrink:0;">→</span><span style="font-size:13px;color:var(--sub);">The retraining loop keeps the latest dataset reflected in the live metrics</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;"><span style="color:var(--acll);flex-shrink:0;">→</span><span style="font-size:13px;color:var(--sub);">MAE {{ '%.2f'|format(stats.mae if stats else 0) }}, MSE {{ '%.2f'|format(stats.mse if stats else 0) }}, RMSE {{ '%.2f'|format(stats.rmse if stats else 0) }}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-ttl a3">Technology Stack</div>
+  <div class="card a3" style="margin-bottom:36px;">
+    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:18px;">
+      <span class="tech-pill">🐍 Python 3.x</span>
+      <span class="tech-pill">🔬 scikit-learn</span>
+      <span class="tech-pill">⚡ XGBoost</span>
+      <span class="tech-pill">🌶️ Flask</span>
+      <span class="tech-pill">🐼 pandas</span>
+      <span class="tech-pill">🔢 NumPy</span>
+      <span class="tech-pill">📊 Chart.js 4</span>
+      <span class="tech-pill">🎨 CSS Variables</span>
+      
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:9px;">
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">📁</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">Dataset</div><div style="font-size:13px;font-weight:700;color:var(--acll);">{{ stats.rows if stats else 0 }} Records</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">🤖</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">Model Variants</div><div style="font-size:13px;font-weight:700;color:var(--acll);">21</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">🏆</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">Best R²</div><div style="font-size:13px;font-weight:700;color:var(--ok);">{{ '%.4f'|format(stats.r2 if stats else 0) }}</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">📉</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">MAE</div><div style="font-size:13px;font-weight:700;color:var(--ok);">{{ '%.2f'|format(stats.mae if stats else 0) }}</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">∑</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">MSE</div><div style="font-size:13px;font-weight:700;color:var(--warn);">{{ '%.2f'|format(stats.mse if stats else 0) }}</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">📐</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">RMSE</div><div style="font-size:13px;font-weight:700;color:var(--acll);">{{ '%.2f'|format(stats.rmse if stats else 0) }}</div></div>
+      <div style="padding:15px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;"><div style="font-size:22px;margin-bottom:5px;">🔄</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--mut);">Self-Retrain</div><div style="font-size:13px;font-weight:700;color:var(--acll);">Every Predict</div></div>
+    </div>
+  </div>
+
+  <div class="sec-ttl a4">Development Timeline</div>
+  <div class="card a4" style="margin-bottom:36px;">
+    <div class="tl-item"><div class="tl-date">Phase 1</div><div><div class="tl-h">Data Collection & EDA</div><div class="tl-p">Extended dataset 1949–2026. Trend visualization and seasonality analysis with seaborn and matplotlib.</div></div></div>
+    <div class="tl-item"><div class="tl-date">Phase 2</div><div><div class="tl-h">Feature Engineering</div><div class="tl-p">Extracted month + year. IQR outlier removal, StandardScaler, PolynomialFeatures for linear variants.</div></div></div>
+    <div class="tl-item"><div class="tl-date">Phase 3</div><div><div class="tl-h">Model Training (21 Variants)</div><div class="tl-p">Linear, Ridge, Lasso, ElasticNet, Decision Tree, Random Forest, SVR, KNN, XGBoost, GradientBoosting, AdaBoost with simple and tuned variants.</div></div></div>
+    <div class="tl-item"><div class="tl-date">Phase 4</div><div><div class="tl-h">Flask API + Self-Retraining</div><div class="tl-p">Each prediction updates the dataset and triggers automatic model retrain, which refreshes rows and all live metrics.</div></div></div>
+    <div class="tl-item"><div class="tl-date">Phase 5</div><div><div class="tl-h">Premium Dashboard UI</div><div class="tl-p">Interactive charts, multi-page navigation, modal popups, and a live metric dashboard experience.</div></div></div>
+  </div>
+
+  <div class="g2 a5" style="margin-bottom:36px;">
+    <div class="card">
+      <div class="card-hd"><div class="dot g"></div>Contact Us</div>
+      <input type="text" class="ci" placeholder="Your Name"/>
+      <input type="email" class="ci" placeholder="Email Address"/>
+      <input type="text" class="ci" placeholder="Subject"/>
+      <textarea class="ci" placeholder="Your message..."></textarea>
+      <button class="send-btn" onclick="document.getElementById('sendMsg').style.display='block'">→ Send Message</button>
+      <div id="sendMsg" style="display:none;margin-top:10px;text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--ok);">✓ Message received! We'll respond soon.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card">
+        <div class="card-hd" style="margin-bottom:12px;"><div class="dot w"></div>Quick Links</div>
+        <a class="qlink" href="/">🏠 Home <span style="color:var(--mut);">→</span></a>
+        <a class="qlink" href="/information">📊 Model Information <span style="color:var(--mut);">→</span></a>
+        <a class="qlink" href="/predictor">✈️ Try Predictor <span style="color:var(--mut);">→</span></a>
+      </div>
+      <div class="card">
+        <div class="card-hd" style="margin-bottom:12px;"><div class="dot"></div>Project Stats</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">Model Variants</span><span style="font-family:'Space Mono',monospace;color:var(--acll);">21</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">Algorithm Families</span><span style="font-family:'Space Mono',monospace;color:var(--acll);">6</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">Data Points</span><span style="font-family:'Space Mono',monospace;color:var(--acll);">{{ stats.rows if stats else 0 }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">R²</span><span style="font-family:'Space Mono',monospace;color:var(--ok);">{{ '%.4f'|format(stats.r2 if stats else 0) }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">MAE / MSE / RMSE</span><span style="font-family:'Space Mono',monospace;color:var(--acll);">{{ '%.2f'|format(stats.mae if stats else 0) }} / {{ '%.2f'|format(stats.mse if stats else 0) }} / {{ '%.2f'|format(stats.rmse if stats else 0) }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">Year Range</span><span style="font-family:'Space Mono',monospace;color:var(--acll);">1949–2026</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--sub);">Self-Retrain</span><span style="font-family:'Space Mono',monospace;color:var(--ok);">Live</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="ft-left">© 2026 · AirPax Forecast Engine · ML Research Project</div>
+    <div class="ft-tags"><span class="ft-tag">Python</span><span class="ft-tag">Flask</span><span class="ft-tag">sklearn</span><span class="ft-tag">XGBoost</span><span class="ft-tag">Chart.js</span></div>
+  </footer>
+</div>
+<script src="/static/main.js"></script>
+</body>
+</html>

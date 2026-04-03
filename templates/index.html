@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AirPax · Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+.hero-band{
+  background:linear-gradient(135deg,rgba(17,31,162,.14) 0%,rgba(17,31,162,.03) 100%);
+  border:1px solid var(--border);border-radius:18px;padding:48px 40px;
+  margin-bottom:36px;position:relative;overflow:hidden;
+}
+.home-head{padding-top:26px;}
+.hero-band::before{
+  content:'';position:absolute;top:-100px;right:-100px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(17,31,162,.18) 0%,transparent 70%);pointer-events:none;
+}
+.badge-live{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 13px;border-radius:20px;background:rgba(78,203,168,.12);
+  border:1px solid rgba(78,203,168,.3);color:var(--ok);margin-bottom:20px;
+}
+.badge-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok);animation:bpulse 1.4s ease-in-out infinite;}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn-pri{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--ac);color:var(--warm);border:none;border-radius:8px;
+  padding:12px 24px;cursor:pointer;font-weight:700;text-decoration:none;
+  transition:background .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn-pri:hover{background:var(--acl);box-shadow:0 0 24px rgba(17,31,162,.6);}
+.btn-out{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;color:var(--acll);border:1.5px solid var(--border);
+  border-radius:8px;padding:12px 24px;cursor:pointer;text-decoration:none;
+  transition:border-color .2s,background .2s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn-out:hover{border-color:var(--acl);background:rgba(17,31,162,.1);}
+.tgbtn{
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;
+  padding:7px 13px;border-radius:6px;border:1px solid var(--border);background:var(--surface);
+  color:var(--sub);cursor:pointer;transition:all .2s;
+}
+.tgbtn:hover{border-color:var(--acl);color:var(--acll);}
+.tgbtn.on{border-color:var(--acl);color:var(--acll);background:rgba(17,31,162,.16);}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="nav-brand" href="/"><span class="brand-dot"></span>AirPax</a>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/information">Information</a>
+    <a class="nav-link" href="/predictor">Predictor</a>
+    <a class="nav-link" href="/about">About</a>
+  </div>
+  <div class="nav-right">
+    <div class="theme-toggle" id="themeToggle"></div>
+    <a class="nav-cta" href="/predictor">→ Predict</a>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="page">
+
+  <div class="hero-band a1 home-head">
+    <div class="badge-live">Model Active · Self-Retraining</div>
+    <div class="pg-label" style="margin-bottom:10px;">Machine Learning · Regression · Time Series</div>
+    <h1 class="pg-title" style="font-size:clamp(32px,5.5vw,58px);">
+      Airline Passenger<br/><span class="ac">Demand</span> Prediction
+    </h1>
+    <p style="font-size:15px;color:var(--sub);max-width:520px;line-height:1.68;">
+      A full-stack ML pipeline analyzing airline passenger trends from 1949–2026 using 21 model variants
+      across 6 algorithm families, with hyperparameter tuning and a live self-retraining engine.
+    </p>
+    <div class="cta-row">
+      <a class="btn-pri" href="/predictor">→ Try Predictor</a>
+      <a class="btn-out" href="/information">View 21 Models</a>
+    </div>
+  </div>
+
+  <div class="stt-grid a2">
+    <div class="stt"><div class="stt-lb">Best R²</div><div class="stt-vl a">{{ '%.4f'|format(stats.r2 if stats else 0) }}</div><div class="stt-sub">Linear Regression</div></div>
+    <div class="stt"><div class="stt-lb">Models Tested</div><div class="stt-vl a">21</div><div class="stt-sub">6 algorithm families</div></div>
+    <div class="stt"><div class="stt-lb">Dataset Records</div><div class="stt-vl y">{{ stats.rows if stats else 0 }}</div><div class="stt-sub">1949 – 2026</div></div>
+    <div class="stt"><div class="stt-lb">Self-Retrain</div><div class="stt-vl a">Live</div><div class="stt-sub">Every prediction</div></div>
+  </div>
+
+  <div class="sec-ttl a3">Passenger Trend Analysis</div>
+  <div class="g2 a3">
+    <div class="card">
+      <div class="card-hd"><div class="dot"></div>Growth Drivers</div>
+      <div style="display:flex;flex-direction:column;gap:13px;">
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--acll);margin-top:4px;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:600;">1949–1970 · Initial Takeoff</div><div style="font-size:12px;color:var(--sub);margin-top:2px;">Post-war aviation boom, jet engines, 3× passenger growth</div></div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--acl);margin-top:4px;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:600;">1970–2000 · Deregulation Era</div><div style="font-size:12px;color:var(--sub);margin-top:2px;">Budget airlines, mass tourism, rapid route expansion</div></div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--err);margin-top:4px;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:600;">2020–2022 · COVID Collapse</div><div style="font-size:12px;color:var(--sub);margin-top:2px;">~60% demand drop, unprecedented travel disruption</div></div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--ok);margin-top:4px;flex-shrink:0;"></div><div><div style="font-size:13px;font-weight:600;">2023–2026 · Strong Recovery</div><div style="font-size:12px;color:var(--sub);margin-top:2px;">Post-pandemic rebound exceeding pre-COVID peaks by 2024</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="dot w"></div>Seasonal Patterns</div>
+      <p style="font-size:13px;color:var(--sub);line-height:1.65;margin-bottom:16px;">Strong 12-month cyclicality repeats every year. The model's <strong style="color:var(--acll);">month feature</strong> captures this naturally.</p>
+      <div class="fb">
+        <div class="fr"><div class="fl"><span>Jun–Aug (Peak Summer)</span><span class="pct">+21%</span></div><div class="ft"><div class="ff" style="width:0" data-w="95%"></div></div></div>
+        <div class="fr"><div class="fl"><span>Mar–May (Spring)</span><span class="pct">+5%</span></div><div class="ft"><div class="ff" style="width:0" data-w="60%"></div></div></div>
+        <div class="fr"><div class="fl"><span>Sep–Oct (Autumn)</span><span class="pct">avg</span></div><div class="ft"><div class="ff" style="width:0" data-w="48%"></div></div></div>
+        <div class="fr"><div class="fl"><span>Nov–Jan (Winter)</span><span class="pct">−13%</span></div><div class="ft"><div class="ff" style="width:0" data-w="28%"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card a4" style="margin-bottom:15px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <div class="card-hd" style="margin-bottom:0;"><div class="dot"></div>Year-wise Passenger Volume Trend</div>
+      <div style="display:flex;gap:6px;">
+        <button class="tgbtn on" id="tbLine" onclick="switchTrend('line',this)">📈 Line</button>
+        <button class="tgbtn" id="tbBar" onclick="switchTrend('bar',this)">📊 Bar</button>
+        <button class="tgbtn" id="tbArea" onclick="switchTrend('area',this)">🌊 Area</button>
+      </div>
+    </div>
+    <div class="cw" style="height:300px;"><canvas id="trendChart"></canvas></div>
+  </div>
+
+  <div class="g2 a5" style="margin-bottom:38px;">
+    <div class="card">
+      <div class="card-hd" style="margin-bottom:14px;"><div class="dot g"></div>Monthly Seasonality (Radar)</div>
+      <div class="cw" style="height:240px;"><canvas id="seasonChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hd" style="margin-bottom:14px;"><div class="dot w"></div>Decadal Growth Comparison</div>
+      <div class="cw" style="height:240px;"><canvas id="decadeChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="sec-ttl a5">Data Pipeline</div>
+  <div class="pipeline a5">
+    <div class="ps"><div class="ps-num">01</div><div class="ps-icon">📥</div><div class="ps-name">Ingest</div><div class="ps-desc">CSV load<br/>{{ stats.rows if stats else 0 }} rows</div></div>
+    <div class="ps"><div class="ps-num">02</div><div class="ps-icon">🧹</div><div class="ps-name">Clean</div><div class="ps-desc">Drop dupes<br/>nulls</div></div>
+    <div class="ps"><div class="ps-num">03</div><div class="ps-icon">⚙️</div><div class="ps-name">Features</div><div class="ps-desc">month, year<br/>extracted</div></div>
+    <div class="ps"><div class="ps-num">04</div><div class="ps-icon">✂️</div><div class="ps-name">Split</div><div class="ps-desc">80/20<br/>seed=42</div></div>
+    <div class="ps"><div class="ps-num">05</div><div class="ps-icon">🔬</div><div class="ps-name">Train+Tune</div><div class="ps-desc">21 variants<br/>GridSearch</div></div>
+    <div class="ps"><div class="ps-num">06</div><div class="ps-icon">🔄</div><div class="ps-name">Self-Retrain</div><div class="ps-desc">On predict<br/>auto update</div></div>
+    <div class="ps"><div class="ps-num">07</div><div class="ps-icon">🚀</div><div class="ps-name">Deploy</div><div class="ps-desc">model.pkl<br/>Flask API</div></div>
+  </div>
+
+  <footer class="footer">
+    <div class="ft-left">© 2026 · AirPax Forecast Engine · Flask + scikit-learn</div>
+    <div class="ft-tags"><span class="ft-tag">Python</span><span class="ft-tag">sklearn</span><span class="ft-tag">Flask</span><span class="ft-tag">Chart.js</span></div>
+  </footer>
+</div>
+<script src="/static/main.js"></script>
+<script>
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let histData=[],trendCI=null;
+function aggByYear(d){const m={};d.forEach(r=>{if(!m[r.year])m[r.year]={t:0,n:0};m[r.year].t+=r.passengers;m[r.year].n++;});return Object.entries(m).sort((a,b)=>a[0]-b[0]).map(([y,v])=>({year:+y,avg:Math.round(v.t/v.n)}));}
+function aggByMonth(d){const m={};d.forEach(r=>{if(!m[r.month])m[r.month]={t:0,n:0};m[r.month].t+=r.passengers;m[r.month].n++;});return Array.from({length:12},(_,i)=>{const v=m[i+1]||{t:0,n:1};return Math.round(v.t/v.n);});}
+function mkGrad(ctx,color,h){const g=ctx.createLinearGradient(0,0,0,h||300);g.addColorStop(0,color+'BB');g.addColorStop(1,color+'00');return g;}
+function buildTrend(type,yd){
+  const c=C();
+  setChartDefaults();
+  const ctx=document.getElementById('trendChart').getContext('2d');
+  if(trendCI)trendCI.destroy();
+  const labels=yd.map(d=>d.year),values=yd.map(d=>d.avg);
+  const isArea=type==='area';
+  trendCI=new Chart(ctx,{
+    type:type==='area'?'line':type,
+    data:{labels,datasets:[{
+      label:'Avg Monthly Passengers',data:values,
+      borderColor:'#3d4fd4',
+      backgroundColor:isArea?mkGrad(ctx,'#111FA2',300):type==='bar'?yd.map(d=>d.year>=2020&&d.year<=2022?'rgba(224,92,92,.65)':'rgba(17,31,162,.65)'):'rgba(17,31,162,.1)',
+      borderWidth:type==='bar'?0:2.5,fill:isArea,tension:.45,
+      pointRadius:type==='line'?3:0,pointHoverRadius:7,pointBackgroundColor:'#3d4fd4',
+      borderRadius:type==='bar'?5:0,borderSkipped:false,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeInOutQuart'},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:c.card,borderColor:'rgba(17,31,162,.3)',borderWidth:1,titleColor:c.txt,bodyColor:c.sub,callbacks:{label:ctx=>` ${ctx.raw} pax/month avg`}}},
+      scales:{
+        x:{grid:{color:c.grid,drawTicks:false},ticks:{color:c.sub,maxTicksLimit:14,font:{family:"'Space Mono',monospace",size:9}}},
+        y:{grid:{color:c.grid},ticks:{color:c.sub,callback:v=>v.toLocaleString(),font:{family:"'Space Mono',monospace",size:9}}}
+      }
+    }
+  });
+}
+function switchTrend(type,btn){document.querySelectorAll('.tgbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');if(histData.length)buildTrend(type,aggByYear(histData));}
+function buildSeason(md){
+  const c=C();setChartDefaults();
+  new Chart(document.getElementById('seasonChart').getContext('2d'),{
+    type:'radar',
+    data:{labels:MONTHS,datasets:[{label:'Avg Passengers',data:md,borderColor:'#3d4fd4',backgroundColor:'rgba(17,31,162,.14)',borderWidth:2,pointBackgroundColor:'#7b8ae8',pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{r:{grid:{color:c.grid},ticks:{backdropColor:'transparent',color:c.sub,count:4,font:{family:"'Space Mono',monospace",size:9}},pointLabels:{color:c.txt,font:{family:"'Space Mono',monospace",size:10}}}}}
+  });
+}
+function buildDecade(data){
+  const c=C();setChartDefaults();
+  const decs=['1950s','1960s','1970s','1980s','1990s','2000s','2010s','2020s'];
+  const dm={};data.forEach(d=>{const l=Math.floor(d.year/10)*10+'s';if(!dm[l])dm[l]={t:0,n:0};dm[l].t+=d.passengers;dm[l].n++;});
+  const vals=decs.map(d=>dm[d]?Math.round(dm[d].t/dm[d].n):0);
+  const bgColors=['rgba(17,31,162,.5)','rgba(17,31,162,.6)','rgba(61,79,212,.55)','rgba(61,79,212,.65)','rgba(123,138,232,.5)','rgba(123,138,232,.6)','rgba(17,31,162,.65)','rgba(224,92,92,.6)'];
+  new Chart(document.getElementById('decadeChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:decs,datasets:[{data:vals,backgroundColor:bgColors,borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{
+      backgroundColor:c.card,
+      borderColor:'rgba(17,31,162,.42)',
+      borderWidth:1.2,
+      titleColor:c.txt,
+      bodyColor:c.txt,
+      callbacks:{
+        label:ctx=>` ${ctx.raw.toLocaleString()} avg pax`,
+        labelColor:() => ({
+          borderColor:'#111FA2',
+          backgroundColor:'#3d4fd4',
+          borderWidth:2,
+          borderRadius:2
+        })
+      }
+    }},
+      scales:{
+        x:{
+          grid:{display:false},
+          ticks:{
+            color:c.txt,
+            autoSkip:false,
+            minRotation:0,
+            maxRotation:0,
+            padding:6,
+            font:{family:"'Space Mono',monospace",size:11,weight:'700'}
+          }
+        },
+        y:{
+          grid:{color:c.grid},
+          ticks:{color:c.sub,callback:v=>v.toLocaleString(),font:{family:"'Space Mono',monospace",size:10}}
+        }
+      }}
+  });
+}
+fetch('/api/historical').then(r=>r.json()).then(data=>{histData=data;setChartDefaults();buildTrend('line',aggByYear(data));buildSeason(aggByMonth(data));buildDecade(data);}).catch(()=>{ 
+
+  // const mock=[];for(let y=1949;y<=2026;y++)for(let m=1;m<=12;m++){const s=[.88,.87,.97,.98,1,1.1,1.2,1.21,1.1,.97,.87,.93][m-1];let p=(112+(y-1949)*8.2)*s;if(y>=2020&&y<=2022)p*=.55;else if(y>=2023)p*=1.22;mock.push({year:y,month:m,passengers:Math.round(p)});}
+  // histData=mock;setChartDefaults();buildTrend('line',aggByYear(mock));buildSeason(aggByMonth(mock));buildDecade(mock);
+});
+</script>
+</body>
+</html>
